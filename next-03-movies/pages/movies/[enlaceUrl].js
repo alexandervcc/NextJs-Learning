@@ -3,56 +3,73 @@ import { URL_API } from "@/config/index";
 import Image from "next/image";
 import styles from "@/styles/[enlaceUrl].module.css";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const enlaceUrl = ({ selectedDog }) => {
+  const router = useRouter();
+
+  const handlerDeleteDog = async (e) => {
+    if (confirm("Sure to delete doggy?")) {
+      const deleteReq = await fetch(`${URL_API}/api/dogs/${selectedDog.id}`, {
+        method: "DELETE",
+      });
+      if (!deleteReq.ok) {
+        alert("Error deleting movie");
+      } else {
+        alert("Dog deleted");
+        router.push("/movies");
+      }
+    }
+  };
+
   return (
     <Layout title="Movie Detail">
       <div className={styles.caja}>
         <div className="row">
           <div className="col-sm-4 offset-8">
-          <Link href={`/movies/edit/${selectedDog.enlaceUrl}`}>
+            <Link href={`/movies/edit/${selectedDog.id}`}>
               <a className="btn btn-secondary btn-sm">
-                <i className="bi bi-pencil-fill" />Go back
+                <i className="bi bi-pencil-fill" />
+                Edit
               </a>
             </Link>
             &nbsp;
-            <Link href={`/movies/delete/${selectedDog.enlaceUrl}`}>
-              <a className="btn btn-danger btn-sm">
-                <i className="bi bi-eraser-fill" />Go back
-              </a>
-            </Link>
+            <a onClick={handlerDeleteDog} className="btn btn-danger btn-sm">
+              <i className="bi bi-eraser-fill" />
+              Delete
+            </a>
           </div>
         </div>
         <div className="card">
           <div className="card-header">
-            <h2 className="card-title">{selectedDog.name} </h2>
+            <h2 className="card-title">{selectedDog.attributes.name} </h2>
           </div>
           <div className="card-body">
             <div className="row">
               <div className="col-sm-6 offset-3">
                 <Image
-                  className="img-responsive"
                   src={
-                    selectedDog.image
-                      ? selectedDog.image
+                    selectedDog.attributes.image.data
+                      ? selectedDog.attributes.image.data[0].attributes.formats
+                          .thumbnail.url
                       : "/images/defaults.jpg"
                   }
-                  width={255}
-                  height={350}
+                  width={168}
+                  height={250}
                 />
               </div>
             </div>
             <p className="card-text">
-              <strong>Name:</strong> {selectedDog.name}
+              <strong>Name:</strong> {selectedDog.attributes.name}
             </p>
             <p className="card-text">
-              <strong>Descripcion:</strong> {selectedDog.desc}
+              <strong>Descripcion:</strong> {selectedDog.attributes.desc}
             </p>
             <p className="card-text">
               <strong>Age:</strong>{" "}
               <span className="badge bg-warning text-dark">
                 {" "}
-                {selectedDog.age}
+                {selectedDog.attributes.age}
               </span>
             </p>
           </div>
@@ -73,7 +90,9 @@ export const getStaticPaths = async () => {
   const res = await fetch(`${URL_API}/api/dogs`);
   const dogs = await res.json();
 
-  const paths = dogs.map((dog) => ({ params: { enlaceUrl: dog.enlaceUrl } }));
+  const paths = dogs.data.map((dog) => ({
+    params: { enlaceUrl: dog.attributes.enlaceUrl },
+  }));
 
   return {
     paths,
@@ -83,10 +102,13 @@ export const getStaticPaths = async () => {
 
 //getStaticProps
 export const getStaticProps = async ({ params: { enlaceUrl } }) => {
-  const res = await fetch(`${URL_API}/api/dogs/${enlaceUrl}`);
+  const URI =
+    `${URL_API}/api/dogs?filters[enlaceUrl]=${enlaceUrl}` + `&populate=*`;
+  const res = await fetch(URI);
   const doggoData = await res.json();
   return {
-    props: { selectedDog: doggoData },
+    props: { selectedDog: doggoData.data[0] },
+    revalidate: 2,
   };
 };
 

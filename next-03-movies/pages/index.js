@@ -16,13 +16,12 @@ export default function Home({ doggerinos }) {
 /*getStaticProps:  contenido estatico, no se actualiza*/
 export const getStaticProps = async () => {
   const res = await fetch(
-    `${URL_API}/api/dogs?
-    sort=createdAt:DESC
-    &pagination[start]=0
-    &pagination[limit]=2
-    &populate=*`
+    `${URL_API}/api/dogs?` +
+      `sort=createdAt:DESC` +
+      `&populate=*`
   );
   const doggerinos = await res.json();
+  console.log
   return {
     props: { doggerinos },
     revalidate: 2,

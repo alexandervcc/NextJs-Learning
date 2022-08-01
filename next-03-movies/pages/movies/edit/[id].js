@@ -1,18 +1,26 @@
 import Layout from "@/components/Layout";
+import Modal from "@/components/Modal";
+import UploadImage from "@/components/UploadImage";
 import { URL_API } from "@/config/index";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-const newMovie = ({}) => {
+const editDog = ({ updatedDog }) => {
   const router = useRouter();
+
   const [values, setValues] = useState({
-    name: "",
-    desc: "",
-    age: "",
-    date: "",
+    name: updatedDog.data.attributes.name,
+    desc: updatedDog.data.attributes.desc,
+    age: updatedDog.data.attributes.age,
+    date: updatedDog.data.attributes.date,
   });
 
-  const handlePostNewDog = async (e) => {
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setValues({ ...values, [name]: value });
+  };
+
+  const handlePutUpdateDog = async (e) => {
     e.preventDefault();
     const emptyValues = Object.values(values).some((element) => element === "");
 
@@ -21,8 +29,8 @@ const newMovie = ({}) => {
       return;
     }
 
-    const reponse = await fetch(`${URL_API}/api/dogs`, {
-      method: "POST",
+    const reponse = await fetch(`${URL_API}/api/dogs/${updatedDog.data.id}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -30,22 +38,24 @@ const newMovie = ({}) => {
     });
 
     if (!reponse.ok) {
-      alert("Error Creating Doggy.");
+      alert("Error Updating Doggy.");
     } else {
-      alert("Doggy Created Successfully");
+      alert("Doggy Updated Successfully");
       router.push("/movies");
     }
   };
 
-  const handleInput = (e) => {
-    const { name, value } = e.target;
-    setValues({ ...values, [name]: value });
+  const uploadedDogImage = async (e) => {
+    setShowModal(false)
+    alert("Image Uploaded Successfully!")
   };
 
+  const [showModal, setShowModal] = useState(false);
+
   return (
-    <Layout title="New Dog">
-      <h1 className="text-center mt-4">Add new Dog</h1>
-      <form onSubmit={handlePostNewDog}>
+    <Layout title="Edit Dog">
+      <h1 className="text-center mt-4">Update Dog: {updatedDog.name}</h1>
+      <form onSubmit={handlePutUpdateDog}>
         <div className="row my-3">
           <div className="col-sm-6">
             <div className="mb-3">
@@ -102,12 +112,43 @@ const newMovie = ({}) => {
             </div>
           </div>
           <button type="submit" className="btn btn-success">
-            Create Dog <i className="bi bi-arrow-rigth-square-fill" />
+            Update Dog <i className="bi bi-arrow-rigth-square-fill" />
           </button>
         </div>
       </form>
+      <div className="row mb-3">
+        <div className="col-sm-6 offset-3">
+          <div className="text-center0">
+            <button
+              onClick={() => setShowModal(true)}
+              className="btn btn-secondary w-100"
+            >
+              <i className="bi bi-image-fill" /> Asign Image
+            </button>
+          </div>
+          <Modal
+            show={showModal}
+            onClose={() => setShowModal(false)}
+          >
+            <UploadImage
+              idDog={updatedDog.data.id}
+              uploadedImage={uploadedDogImage}
+            />
+          </Modal>
+        </div>
+      </div>
     </Layout>
   );
 };
 
-export default newMovie;
+export default editDog;
+
+//getServerSideProps
+export const getServerSideProps = async ({ params: { id } }) => {
+  const res = await fetch(`${URL_API}/api/dogs/${id}?populate=*`);
+  const doggy = await res.json();
+
+  return {
+    props: { updatedDog: doggy },
+  };
+};
