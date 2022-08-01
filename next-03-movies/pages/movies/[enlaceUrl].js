@@ -1,3 +1,6 @@
+import "react-toastify/dist/ReactToastify.css";
+
+import { ToastContainer, toast } from "react-toastify";
 import Layout from "@/components/Layout";
 import { URL_API } from "@/config/index";
 import Image from "next/image";
@@ -14,9 +17,9 @@ const enlaceUrl = ({ selectedDog }) => {
         method: "DELETE",
       });
       if (!deleteReq.ok) {
-        alert("Error deleting movie");
+        toast.error("Error deleting movie")
       } else {
-        alert("Dog deleted");
+        toast.success("Dog deleted")
         router.push("/movies");
       }
     }
@@ -24,6 +27,7 @@ const enlaceUrl = ({ selectedDog }) => {
 
   return (
     <Layout title="Movie Detail">
+      <ToastContainer theme="colored"/>
       <div className={styles.caja}>
         <div className="row">
           <div className="col-sm-4 offset-8">

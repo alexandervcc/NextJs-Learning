@@ -1,3 +1,6 @@
+import "react-toastify/dist/ReactToastify.css";
+
+import { ToastContainer, toast } from "react-toastify";
 import Layout from "@/components/Layout";
 import Modal from "@/components/Modal";
 import UploadImage from "@/components/UploadImage";
@@ -25,7 +28,7 @@ const editDog = ({ updatedDog }) => {
     const emptyValues = Object.values(values).some((element) => element === "");
 
     if (emptyValues) {
-      alert("Empty values, provide one.");
+      toast.error("Empty values, provide one.");
       return;
     }
 
@@ -38,22 +41,23 @@ const editDog = ({ updatedDog }) => {
     });
 
     if (!reponse.ok) {
-      alert("Error Updating Doggy.");
+      toast.error("Error Updating Doggy.");
     } else {
-      alert("Doggy Updated Successfully");
+      toast.success("Doggy Updated Successfully");
       router.push("/movies");
     }
   };
 
   const uploadedDogImage = async (e) => {
-    setShowModal(false)
-    alert("Image Uploaded Successfully!")
+    setShowModal(false);
+    toast.success("Image Uploaded Successfully!");
   };
 
   const [showModal, setShowModal] = useState(false);
 
   return (
     <Layout title="Edit Dog">
+      <ToastContainer theme="colored" />
       <h1 className="text-center mt-4">Update Dog: {updatedDog.name}</h1>
       <form onSubmit={handlePutUpdateDog}>
         <div className="row my-3">
@@ -126,10 +130,7 @@ const editDog = ({ updatedDog }) => {
               <i className="bi bi-image-fill" /> Asign Image
             </button>
           </div>
-          <Modal
-            show={showModal}
-            onClose={() => setShowModal(false)}
-          >
+          <Modal show={showModal} onClose={() => setShowModal(false)}>
             <UploadImage
               idDog={updatedDog.data.id}
               uploadedImage={uploadedDogImage}

@@ -1,5 +1,8 @@
-import Layout from "@/components/Layout";
+import "react-toastify/dist/ReactToastify.css";
+
+import { ToastContainer, toast } from "react-toastify";
 import { URL_API } from "@/config/index";
+import Layout from "@/components/Layout";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -17,7 +20,7 @@ const newMovie = ({}) => {
     const emptyValues = Object.values(values).some((element) => element === "");
 
     if (emptyValues) {
-      alert("Empty values, provide one.");
+      toast.error("Empty values, provide one.");
       return;
     }
 
@@ -30,9 +33,9 @@ const newMovie = ({}) => {
     });
 
     if (!reponse.ok) {
-      alert("Error Creating Doggy.");
+      toast.error("Error Creating Doggy.");
     } else {
-      alert("Doggy Created Successfully");
+      toast.success("Doggy Created Successfully");
       router.push("/movies");
     }
   };
@@ -45,6 +48,9 @@ const newMovie = ({}) => {
   return (
     <Layout title="New Dog">
       <h1 className="text-center mt-4">Add new Dog</h1>
+
+      <ToastContainer theme="colored" />
+
       <form onSubmit={handlePostNewDog}>
         <div className="row my-3">
           <div className="col-sm-6">
