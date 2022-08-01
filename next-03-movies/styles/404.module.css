@@ -1,0 +1,14 @@
+.error{
+    background-color: #bfbfbf;
+    padding: 30px;
+    margin: 40px;
+}
+
+.title{
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.par{
+    font-size: 1.5rem;
+}
