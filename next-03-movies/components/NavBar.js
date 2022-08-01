@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "@/styles/NavBar.module.css";
+import Search from "./Search";
 
 const NavBar = () => {
   return (
@@ -29,6 +30,9 @@ const NavBar = () => {
             <Link href="/movies/new">
               <a className="nav-link">New Movie</a>
             </Link>
+          </li>
+          <li className="nav-item">
+            <Search />
           </li>
         </ul>
       </div>

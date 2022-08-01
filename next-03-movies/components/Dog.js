@@ -8,7 +8,11 @@ const Dog = ({ doggo }) => {
       <div className="row my-5 p-3">
         <div className="col-sm-3">
           <Image
-            src={doggo.image ? doggo.image : "/images/defaults.jpg"}
+            src={
+              doggo.image.data
+                ? doggo.image.data[0].attributes.formats.thumbnail.url
+                : "/images/defaults.jpg"
+            }
             width={168}
             height={250}
           />
@@ -23,7 +27,7 @@ const Dog = ({ doggo }) => {
         <div className="col-sm-3 pt-5">
           <Link href={`/movies/${doggo.enlaceUrl}`}>
             <a className="btn btn-success">
-              More info
+              More info... 
               <i className="bi bi-arrow-right-square-fill"></i>
             </a>
           </Link>

@@ -70,7 +70,7 @@ export default enlaceUrl;
 
 //getStaticPaths y getStaticProps
 export const getStaticPaths = async () => {
-  const res = await fetch(`${URL_API}/api/movies`);
+  const res = await fetch(`${URL_API}/api/dogs`);
   const dogs = await res.json();
 
   const paths = dogs.map((dog) => ({ params: { enlaceUrl: dog.enlaceUrl } }));
@@ -83,7 +83,7 @@ export const getStaticPaths = async () => {
 
 //getStaticProps
 export const getStaticProps = async ({ params: { enlaceUrl } }) => {
-  const res = await fetch(`${URL_API}/api/movies/${enlaceUrl}`);
+  const res = await fetch(`${URL_API}/api/dogs/${enlaceUrl}`);
   const doggoData = await res.json();
   return {
     props: { selectedDog: doggoData },
@@ -92,7 +92,7 @@ export const getStaticProps = async ({ params: { enlaceUrl } }) => {
 
 /* //getServerSideProps
 export const getServerSideProps = async ({ query: { enlaceUrl } }) => {
-  const res = await fetch(`${URL_API}/api/movies/${enlaceUrl}`);
+  const res = await fetch(`${URL_API}/api/dogs/${enlaceUrl}`);
   const doggoData = await res.json();
   return {
     props: { doggoData },
