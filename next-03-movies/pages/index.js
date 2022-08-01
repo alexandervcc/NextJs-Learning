@@ -1,10 +1,35 @@
-import Layout from '../components/Layout'
+import Dog from "@/components/Dog";
+import Layout from "@/components/Layout";
+import { URL_API } from "@/config/index";
 
-export default function Home() {
+export default function Home({ doggerinos }) {
   return (
     <Layout>
-      <h1>Cheems Movies</h1>
-      <p>List of movies: </p>
+      <h1 className="text-center mt-4">Cheems Movies</h1>
+      {doggerinos.map((dog) => (
+        <Dog key={dog.id} doggo={dog}></Dog>
+      ))}
     </Layout>
-  )
+  );
 }
+
+/* //getServerSideProps:  
+export const getServerSideProps = async () => {
+  const res = await fetch(`${URL_API}/api/movies`);
+  const doggerinos = await res.json();
+  return {
+    props: {doggerinos},
+  };
+};
+ */
+
+/*getStaticProps:  contenido estatico, no se actualiza*/
+export const getStaticProps = async () => {
+  const res = await fetch(`${URL_API}/api/movies`);
+  const doggerinos = await res.json();
+  console.log("dogs: ", doggerinos);
+  return {
+    props: { doggerinos },
+    //revalidate:2
+  };
+};
