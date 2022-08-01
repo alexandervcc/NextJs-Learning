@@ -1,0 +1,15 @@
+.encabezado {
+  height: 350px;
+  width: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url("/images/wallpaper.jpg") no-repeat center center;
+  color: #fff;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.margenArriba{
+    padding-top: 120px;   
+}
