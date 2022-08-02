@@ -3,16 +3,20 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import Layout from "@/components/Layout";
 import Link from "next/link";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/ContextAuth";
 
 const signup = () => {
-  const { signUp } = useContext(AuthContext);
+  const { signUp,error } = useContext(AuthContext);
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+
+  useEffect(() => {
+    error ? toast.error(error) : null;
+  });
 
   const handleSignUp = async (e) => {
     e.preventDefault();
