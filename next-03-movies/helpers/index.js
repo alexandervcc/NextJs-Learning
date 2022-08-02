@@ -1,5 +1,5 @@
-import cookie from "cookie-parser";
+import {parse} from "cookie";
 
-export const parsingCookies = (req) => {
-  return cookie.parseCookies(req ? req.headers.cookie || "" : "");
+export const parseCookies = (req) => {
+  return parse(req ? req.headers.cookie || "" : "");
 };

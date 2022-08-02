@@ -21,7 +21,6 @@ export const getStaticProps = async () => {
       `&populate=*`
   );
   const doggerinos = await res.json();
-  console.log
   return {
     props: { doggerinos },
     revalidate: 2,

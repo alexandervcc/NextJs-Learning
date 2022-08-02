@@ -8,40 +8,21 @@ import styles from "@/styles/[enlaceUrl].module.css";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const enlaceUrl = ({ selectedDog }) => {
+const enlaceUrl = ({ selectedDog, props }) => {
   const router = useRouter();
-
-  const handlerDeleteDog = async (e) => {
-    if (confirm("Sure to delete doggy?")) {
-      const deleteReq = await fetch(`${URL_API}/api/dogs/${selectedDog.id}`, {
-        method: "DELETE",
-      });
-      if (!deleteReq.ok) {
-        toast.error("Error deleting movie")
-      } else {
-        toast.success("Dog deleted")
-        router.push("/movies");
-      }
-    }
-  };
 
   return (
     <Layout title="Movie Detail">
-      <ToastContainer theme="colored"/>
+      <ToastContainer theme="colored" />
       <div className={styles.caja}>
         <div className="row">
-          <div className="col-sm-4 offset-8">
+          <div className="col-sm-4 ">
             <Link href={`/movies/edit/${selectedDog.id}`}>
               <a className="btn btn-secondary btn-sm">
                 <i className="bi bi-pencil-fill" />
                 Edit
               </a>
             </Link>
-            &nbsp;
-            <a onClick={handlerDeleteDog} className="btn btn-danger btn-sm">
-              <i className="bi bi-eraser-fill" />
-              Delete
-            </a>
           </div>
         </div>
         <div className="card">

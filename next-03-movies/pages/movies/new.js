@@ -5,14 +5,16 @@ import { URL_API } from "@/config/index";
 import Layout from "@/components/Layout";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { parseCookies } from "@/helpers/index";
 
-const newMovie = ({}) => {
+const newMovie = ({ token, user }) => {
   const router = useRouter();
   const [values, setValues] = useState({
     name: "",
     desc: "",
     age: "",
     date: "",
+    user,
   });
 
   const handlePostNewDog = async (e) => {
@@ -28,11 +30,17 @@ const newMovie = ({}) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ data: values }),
     });
 
     if (!reponse.ok) {
+      if (reponse.status === 403 || reponse.status === 401) {
+        toast.error("Sin Autorizacion");
+        return
+      }
+
       toast.error("Error Creating Doggy.");
     } else {
       toast.success("Doggy Created Successfully");
@@ -117,3 +125,29 @@ const newMovie = ({}) => {
 };
 
 export default newMovie;
+
+export async function getServerSideProps({ req }) {
+  const { token } = parseCookies(req);
+
+  if (!token) {
+    return {
+      notFound: true, //404 si no esta autenticado
+    };
+  }
+
+  const resUser = await fetch(`${URL_API}/api/users/me`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const user = await resUser.json();
+
+  return {
+    props: {
+      token,
+      user,
+    },
+  };
+}

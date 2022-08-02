@@ -7,8 +7,9 @@ import UploadImage from "@/components/UploadImage";
 import { URL_API } from "@/config/index";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { parseCookies } from "@/helpers/index";
 
-const editDog = ({ updatedDog }) => {
+const editDog = ({ updatedDog, token }) => {
   const router = useRouter();
 
   const [values, setValues] = useState({
@@ -36,11 +37,16 @@ const editDog = ({ updatedDog }) => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ data: values }),
     });
 
     if (!reponse.ok) {
+      if (reponse.status === 403 || reponse.status === 401) {
+        toast.error("Sin Autorizacion");
+        return;
+      }
       toast.error("Error Updating Doggy.");
     } else {
       toast.success("Doggy Updated Successfully");
@@ -145,11 +151,19 @@ const editDog = ({ updatedDog }) => {
 export default editDog;
 
 //getServerSideProps
-export const getServerSideProps = async ({ params: { id } }) => {
+export const getServerSideProps = async ({ params: { id }, req }) => {
+  const { token } = parseCookies(req);
+
+  if (!token) {
+    return {
+      notFound: true,
+    };
+  }
+
   const res = await fetch(`${URL_API}/api/dogs/${id}?populate=*`);
   const doggy = await res.json();
 
   return {
-    props: { updatedDog: doggy },
+    props: { updatedDog: doggy, token },
   };
 };

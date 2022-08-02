@@ -43,7 +43,6 @@ export const ProvideAuthorization = ({ children }) => {
       setUser(data.user);
       router.push("/accounts/profile");
     } else {
-      console.log(data.message.message);
       setError(data.message.message);
     }
   };
