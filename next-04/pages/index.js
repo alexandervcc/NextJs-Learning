@@ -2,7 +2,6 @@ const fs = require("fs/promises");
 const path = require("path");
 
 import Link from "next/link";
-import { addAbortSignal } from "stream";
 
 export default function Home({ data }) {
   return (
@@ -18,7 +17,9 @@ export default function Home({ data }) {
       </ul>
       <ul>
         {data.map((element) => (
-          <li key={element.id}>{element.title}</li>
+          <li key={element.id}>
+            <Link href={`/${element.id}`}>{element.title}</Link>
+           </li>
         ))}
       </ul>
     </div>
@@ -42,18 +43,3 @@ export const getStaticProps = async () => {
     */
   };
 };
-
-/*
- 
-consocdklskfe
-jsdjdfhfuu
-jcksdjnjkdnkcjsndddd
-dklsdlkskdskdlsk    jksdnvjksdnv {}
-
-dsjkvsndlkslk
-
-igaskdsfvsldkvsdvsdvsfdvsdvsddsvsdvsdvsdvsdvsdvsdvsdvsdvsdvsdvsdvsdhhhfhfhfgfgffhfhfjhfjfjhhdjdwoioowkdoecmaksckladncsldknvlksdjpowocaposcmascaslksvnsldknvlskdksdjvklsdjkvjsldkjlksjlkdjslkdjvlksndkvlnskdnlvksndlkvnslkdjlkjlkjlklksddddddddddddddddsd
-\
-
-
-*/
